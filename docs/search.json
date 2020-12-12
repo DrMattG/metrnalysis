@@ -1,0 +1,21 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "metrnalysis",
+      "description": "Here is a website of our analysis of meta-analysis packages in R",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2020-12-12T21:57:49+01:00"
+    },
+    {
+      "path": "index.html",
+      "title": "metrnalysis",
+      "description": "How are Meta-analysis packages inter-related?\n",
+      "author": [],
+      "contents": "\r\nIntroduction\r\nWhich packages are available already for Meta-analysis in R and how are they inter-related? Using R functions to develop a dependency network we show that there are currently 95 R packages on CRAN that are focused on meta-analysis and 546 “supporting” packages that underpin functions in the meta-analysis packages. We then use thematic analysis to identify clusters of meta-analysis packages that (based on their description) carry out similar functions.\r\nVisualisation of relationship between R packages that are used in Meta-analysis\r\nTo get a list of packages that are used in Meta-analysis we can have a look at the CRAN task view for MetaAnalysis [“https://CRAN.R-project.org/view=MetaAnalysis”]. Here is the top ten packages in the list (in no particular order).\r\n\r\n     packages\r\n1  compute.es\r\n2         MAc\r\n3         MAd\r\n4     metafor\r\n5         esc\r\n6     metafor\r\n7     metafor\r\n8    estimraw\r\n9     effsize\r\n10 effectsize\r\n\r\nBuild a dependency graph\r\nWe can build a graph of the package dependencies to see how they are related to each other.\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+      "last_modified": "2020-12-12T21:57:58+01:00"
+    }
+  ],
+  "collections": []
+}
