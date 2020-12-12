@@ -1,0 +1,73 @@
+---
+title: "metrnalysis"
+description: |
+  How are Meta-analysis packages inter-related?
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(here)
+library(cranlogs)
+library(RCurl)
+library(XML)
+library(stringr)
+library(miniCRAN)
+library(igraph)
+library(visNetwork)
+
+```
+
+## Introduction
+
+Which packages are available already for Meta-analysis in R and how are they inter-related? Using R functions to develop a dependency network we show that there are currently 95 R packages on CRAN that are focused on meta-analysis and 546 "supporting" packages that underpin functions in the meta-analysis packages. We then use thematic analysis to identify clusters of meta-analysis packages that (based on their description) carry out similar functions.  
+
+
+## Visualisation of relationship between R packages that are used in Meta-analysis
+
+To get a list of packages that are used in Meta-analysis we can have a look at the **CRAN task view for MetaAnalysis** ["https://CRAN.R-project.org/view=MetaAnalysis"]. Here is the top ten packages in the list (in no particular order).
+
+```{r}
+url<-"https://CRAN.R-project.org/view=MetaAnalysis" # location of CRAN task view
+
+# Read in the names of the packages
+html <- paste(readLines(url), collapse="\n")
+matched <- str_match_all(html, "<a href=\"(.*?)\"")
+matched2<-unlist(matched)
+tst<-sub(".*/packages/","",matched2)
+packages.list<-gsub("^(.*?)/.*", "\\1", tst)
+packages.list<-packages.list[2:562]
+
+pkgs<-data.frame("packages"= unlist(packages.list))
+head(pkgs,10)
+```
+
+
+## Build a dependency graph
+
+We can build a graph of the package dependencies to see how they are related to each other.
+
+```{r}
+tags <- c(packages.list)
+dg <- makeDepGraph(tags, enhances = TRUE)
+#sort(degree(dg))
+Isolated = which(degree(dg)<10)
+dg2 = delete.vertices(dg, Isolated)
+#V(dg2)
+vn <- toVisNetworkData(dg2)
+vn$nodes$title<-vn$nodes$label
+vn$nodes$group<-ifelse(vn$nodes$id %in% pkgs$packages==TRUE, "MetaAnalysis", "Supporting")
+# Nodes are sized by degree (the number of links to other packages)
+degree_value <- degree(dg2, mode = "all")
+vn$nodes$value <- degree_value[match(vn$nodes$id, names(degree_value))]
+
+visNetwork(nodes = vn$nodes, edges = vn$edges,main="Both",height = "500px", width = "100%")%>%
+  visOptions(highlightNearest = TRUE)%>%
+  visNodes(color="blue")%>%
+  visSave(file =paste0(here(),"/Plots/both.html"), selfcontained = T)
+
+```
+
+
+
